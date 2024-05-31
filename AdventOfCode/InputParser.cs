@@ -33,28 +33,14 @@ namespace AdventOfCode
             ["twentyfive"] = 25,
         };
 
-        public static IEnumerable<string> GetInputRaw<T>()
-            where T : Solution
-        {
-            var filePath = $"./input.txt";
-            using (var file = new StreamReader(filePath))
-            {
-                while (!file.EndOfStream)
-                {
-                    yield return file.ReadLine()!;
-                }
-            }
-        }
-
         public static IEnumerable<string> GetInputRaw([CallerFilePath] string solutionPath = "")
         {
             var inputPath = ParseInputPath(solutionPath);
-            using (var file = new StreamReader(inputPath))
+            
+            using var file = new StreamReader(inputPath);
+            while (!file.EndOfStream)
             {
-                while (!file.EndOfStream)
-                {
-                    yield return file.ReadLine()!;
-                }
+                yield return file.ReadLine()!;
             }
         }
 
@@ -64,13 +50,13 @@ namespace AdventOfCode
             var absolutePath = solutionPath[..index];
             var callerFile = solutionPath[(index + 1)..];
 
-            index = absolutePath.LastIndexOf("\\");
+            index = absolutePath.LastIndexOf("\\", StringComparison.Ordinal);
             var year = absolutePath[index..];
 
-            callerFile = callerFile[..(callerFile.Length - 3)];
+            callerFile = callerFile[..^3];
             callerFile = callerFile.ToLower();
             var dayValue = callerFile[3..];
-            if (!_dayToNumberLookup.TryGetValue(dayValue, out int value))
+            if (!_dayToNumberLookup.TryGetValue(dayValue, out var value))
             {
                 throw new InvalidOperationException($"The file at {solutionPath} was not a valid input path");
             }

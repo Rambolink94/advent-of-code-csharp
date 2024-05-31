@@ -7,7 +7,8 @@ Console.WriteLine("Hello, World!");
 var solutions = new List<Solution>
 {
     new DayOne(),
+    new DayTwo(),
 };
 
-solutions[0].PartTwo();
+solutions[1].PartOne();
 
