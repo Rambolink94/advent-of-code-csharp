@@ -2,8 +2,17 @@
 {
     public abstract class Solution
     {
-        public abstract void PartOne();
+        private readonly InputParser.Mode _parseMode;
+        
+        protected Solution(InputParser.Mode parseMode)
+        {
+            _parseMode = parseMode;
+        }
 
-        public abstract void PartTwo();
+        public IEnumerable<string> Input => InputParser.GetInputRaw(_parseMode);
+
+        public abstract void Part1();
+
+        public abstract void Part2();
     }
 }

@@ -2,13 +2,13 @@
 using AdventOfCode;
 using AdventOfCode._2015;
 
-Console.WriteLine("Hello, World!");
-
+var parseMode = Enum.Parse<InputParser.Mode>(args[0], true);
 var solutions = new List<Solution>
 {
-    new DayOne(),
-    new DayTwo(),
+    new Day1(parseMode),
+    new Day2(parseMode),
+    new Day3(parseMode),
 };
 
-solutions[1].PartOne();
+solutions[1].Part2();
 

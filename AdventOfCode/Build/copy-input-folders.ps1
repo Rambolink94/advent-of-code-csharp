@@ -15,11 +15,8 @@ Get-ChildItem -Path $SourceDir -Directory | ForEach-Object {
         $InputDir = Join-Path -Path $_.FullName -ChildPath "Input"
         if (Test-Path -Path $InputDir) {
             $DestinationPath = Join-Path -Path $TargetDir -ChildPath "$FolderName/Input"
-            if (-Not (Test-Path -Path $DestinationPath))
-            {
-                echo "Copying: $InputDir => $DestinationPath"
-                Copy-Item -Path $InputDir -Destination $DestinationPath -Recurse -Force
-            }
+            Write-Output "Copying: $InputDir => $DestinationPath"
+            Copy-Item -Path $InputDir\* -Destination $DestinationPath -Recurse -Force
         }
     }
 }
