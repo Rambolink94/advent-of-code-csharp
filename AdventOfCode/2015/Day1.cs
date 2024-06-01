@@ -11,7 +11,7 @@ namespace AdventOfCode._2015
         public override void Part1()
         {
             int floor = 0;
-            foreach (var line in Input)
+            foreach (var line in InputParser.GetInputRaw(_parseMode))
             {
                 foreach (char c in line)
                 {
@@ -29,7 +29,7 @@ namespace AdventOfCode._2015
         {
             int floor = 0;
             int position = 0;
-            foreach (var line in Input)
+            foreach (var line in InputParser.GetInputRaw(_parseMode))
             {
                 foreach (char c in line)
                 {

@@ -2,7 +2,7 @@
 
 namespace AdventOfCode
 {
-    public class InputParser
+    public static class InputParser
     {
         public static IEnumerable<string> GetInputRaw(Mode inputMode, [CallerFilePath] string solutionPath = "")
         {
@@ -47,7 +47,7 @@ namespace AdventOfCode
 
             callerFile = callerFile[..^3];
             var dayValue = callerFile[3..];
-            if (int.TryParse(dayValue, out int value))
+            if (!int.TryParse(dayValue, out int value))
             {
                 throw new InvalidOperationException($"The file at {solutionPath} was not a valid input path");
             }

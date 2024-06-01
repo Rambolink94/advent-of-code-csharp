@@ -8,7 +8,8 @@ var solutions = new List<Solution>
     new Day1(parseMode),
     new Day2(parseMode),
     new Day3(parseMode),
+    new Day4(parseMode),
 };
 
-solutions[1].Part2();
+solutions[3].Part2();
 

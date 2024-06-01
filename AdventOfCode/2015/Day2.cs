@@ -11,7 +11,7 @@ public class Day2 : Solution
     public override void Part1()
     {
         double squareFeet = 0d;
-        foreach (var line in Input)
+        foreach (var line in InputParser.GetInputRaw(_parseMode))
         {
             var dimensions = line.Split('x').Select(double.Parse).ToArray();   // l x w x h
 
@@ -27,7 +27,7 @@ public class Day2 : Solution
     public override void Part2()
     {
         double totalRibbon = 0d;
-        foreach (var line in Input)
+        foreach (var line in InputParser.GetInputRaw(_parseMode))
         {
             var dimensions = line.Split('x').Select(double.Parse).ToArray();   // l x w x h
 
