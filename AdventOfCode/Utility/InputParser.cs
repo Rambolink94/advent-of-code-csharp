@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode
+﻿namespace AdventOfCode.Utility
 {
     public static class InputParser
     {
@@ -23,7 +23,7 @@
                         ? line[1..^1]
                         : line[1..], true);
 
-                    if (mode == inputMode && value == option)
+                    if (mode == inputMode && (value == option || option == 0))
                         modeFound = true;
                     
                     continue;

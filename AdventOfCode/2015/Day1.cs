@@ -1,4 +1,6 @@
 ﻿
+using AdventOfCode.Utility;
+
 namespace AdventOfCode._2015
 {
     public class Day1 : Solution<Day1>

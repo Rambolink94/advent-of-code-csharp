@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode
+﻿using AdventOfCode.Utility;
+
+namespace AdventOfCode
 {
     public abstract class Solution<T> : Solution
         where T : class
