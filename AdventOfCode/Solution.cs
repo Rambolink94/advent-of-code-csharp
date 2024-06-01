@@ -2,6 +2,7 @@
 {
     public abstract class Solution
     {
+        // TODO: Add Input IEnumerator that gets path from namespace and typename.
         protected readonly InputParser.Mode _parseMode;
         
         protected Solution(InputParser.Mode parseMode)

@@ -9,7 +9,8 @@ var solutions = new List<Solution>
     new Day2(parseMode),
     new Day3(parseMode),
     new Day4(parseMode),
+    new Day5(parseMode),
 };
 
-solutions[3].Part2();
+solutions[4].Part1();
 
