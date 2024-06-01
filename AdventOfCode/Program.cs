@@ -12,8 +12,9 @@ var solutions = new List<Solution>
     new Day4(parseMode),
     new Day5(parseMode),
     new Day6(parseMode),
+    new Day7(parseMode),
 };
 
-var result = solutions[5].Part2();
+var result = solutions[6].Part1();
 Console.WriteLine(result);
 

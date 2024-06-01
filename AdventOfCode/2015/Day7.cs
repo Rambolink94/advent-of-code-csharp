@@ -19,7 +19,7 @@ public class Day7 : Solution<Day7>
                 case ["NOT", ..]:
                     NotOp(opParts[1], output, wires);
                     break;
-                case [{ } value]:
+                case [not null]:
                     AssignmentOp(opParts[0], output, wires);
                     break;
                 default:
@@ -54,12 +54,15 @@ public class Day7 : Solution<Day7>
     {
         AddWires(wires, inputA, inputB, output);
 
+        var a = wires.TryGetValue(inputA, out var valueA) ? valueA : ushort.Parse(inputA);
+        var b = wires.TryGetValue(inputB, out var valueB) ? valueB : ushort.Parse(inputB);
+        
         wires[output] = op switch
         {
-            "RSHIFT" => (ushort)(wires[inputA] >> ushort.Parse(inputB)),
-            "LSHIFT" => (ushort)(wires[inputA] << ushort.Parse(inputB)),
-            "OR" => (ushort)(wires[inputA] | wires[inputB]),
-            "AND" => (ushort)(wires[inputA] & wires[inputB]),
+            "RSHIFT" => (ushort)(a >> b),
+            "LSHIFT" => (ushort)(a << b),
+            "OR" => (ushort)(a | b),
+            "AND" => (ushort)(a & b),
             _ => throw new InvalidOperationException($"{op} is an invalid operation"),
         };
     }
@@ -73,5 +76,75 @@ public class Day7 : Solution<Day7>
                 _ = wires.TryAdd(wire, 0);
             }
         }
+    }
+
+    private class Operation
+    {
+        public SignalInput[] Inputs { get; }
+        public Wire Output { get; }
+
+        private string _op;
+        private int _activeSignals;
+
+        public Operation(SignalInput[] inputs, Wire output, string op)
+        {
+            Inputs = inputs;
+            Output = output;
+            _op = op;
+
+            foreach (SignalInput input in Inputs)
+            {
+                if (input is Wire wire)
+                    wire.SignalReceived += OnSignalReceived;
+            }
+        }
+
+        private void OnSignalReceived()
+        {
+            if (Inputs.All(x => x.Signal > 0))
+            {
+                Output.Signal = TriggerOperation();
+            }
+        }
+
+        private ushort TriggerOperation()
+        {
+            ushort a = Inputs[0].Signal;
+            ushort b = Inputs.Length > 1 ? Inputs[1].Signal : (ushort)0;
+            
+            return _op switch
+            {
+                "NOT" => (ushort)~a,
+                "RSHIFT" => (ushort)(a >> b),
+                "LSHIFT" => (ushort)(a << b),
+                "OR" => (ushort)(a | b),
+                "AND" => (ushort)(a & b),
+                _ => throw new InvalidOperationException($"{_op} is an invalid operation"),
+            };
+        }
+    }
+
+    private class SignalInput(ushort signal = 0)
+    {
+        public virtual ushort Signal { get; set; } = signal;
+    }
+    
+    private class Wire(string id) : SignalInput
+    {
+        private ushort _signal;
+        
+        public string Id { get; } = id;
+
+        public override ushort Signal
+        {
+            get => _signal;
+            set
+            {
+                _signal = value;
+                SignalReceived?.Invoke();
+            }
+        }
+
+        public event Action? SignalReceived;
     }
 }
