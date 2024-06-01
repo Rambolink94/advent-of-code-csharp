@@ -1,12 +1,15 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace AdventOfCode
 {
     public static class InputParser
     {
-        public static IEnumerable<string> GetInputRaw(Mode inputMode, [CallerFilePath] string solutionPath = "")
+        public static IEnumerable<string> GetInputRaw<T>(Mode inputMode)
         {
-            var inputPath = ParseInputPath(solutionPath);
+            var inputPath = ParseInputPath(typeof(T));
 
             bool modeFound = false;
             using var file = new StreamReader(inputPath);
@@ -36,23 +39,18 @@ namespace AdventOfCode
             }
         }
 
-        private static string ParseInputPath(string solutionPath)
+        private static string ParseInputPath(Type type)
         {
-            var index = solutionPath.LastIndexOf('\\');
-            var absolutePath = solutionPath[..index];
-            var callerFile = solutionPath[(index + 1)..];
-
-            index = absolutePath.LastIndexOf("\\", StringComparison.Ordinal);
-            var year = absolutePath[index..];
-
-            callerFile = callerFile[..^3];
-            var dayValue = callerFile[3..];
+            if (type.Namespace is null) throw new ArgumentException($"{type} must have a valid namespace.");
+            
+            var year = type.Namespace[(type.Namespace.LastIndexOf('.') + 2)..];
+            var dayValue = type.Name[3..];
             if (!int.TryParse(dayValue, out int value))
             {
-                throw new InvalidOperationException($"The file at {solutionPath} was not a valid input path");
+                throw new InvalidOperationException($"File path cannot be determined from type {type}");
             }
 
-            return "./" + year + "/Input/" + callerFile[..3] + "_" + value + ".txt";
+            return $"./Input/{year}/day_{value}.txt";
         }
 
         public enum Mode

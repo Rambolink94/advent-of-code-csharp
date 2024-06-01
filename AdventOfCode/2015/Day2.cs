@@ -2,16 +2,16 @@
 
 namespace AdventOfCode._2015;
 
-public class Day2 : Solution
+public class Day2 : Solution<Day1>
 {
     public Day2(InputParser.Mode parseMode) : base(parseMode)
     {
     }
     
-    public override void Part1()
+    public override int Part1()
     {
         double squareFeet = 0d;
-        foreach (var line in InputParser.GetInputRaw(_parseMode))
+        foreach (var line in Input)
         {
             var dimensions = line.Split('x').Select(double.Parse).ToArray();   // l x w x h
 
@@ -20,14 +20,14 @@ public class Day2 : Solution
 
             squareFeet += surfaceArea + smallestSide;
         }
-        
-        Console.WriteLine(squareFeet);
+
+        return (int)squareFeet;
     }
 
-    public override void Part2()
+    public override int Part2()
     {
         double totalRibbon = 0d;
-        foreach (var line in InputParser.GetInputRaw(_parseMode))
+        foreach (var line in Input)
         {
             var dimensions = line.Split('x').Select(double.Parse).ToArray();   // l x w x h
 
@@ -36,8 +36,8 @@ public class Day2 : Solution
 
             totalRibbon += ribbingPerimeter + volume;
         }
-        
-        Console.WriteLine(totalRibbon);
+
+        return (int)totalRibbon;
     }
 
     private double SurfaceArea(double l, double w, double h)

@@ -12,5 +12,6 @@ var solutions = new List<Solution>
     new Day5(parseMode),
 };
 
-solutions[4].Part1();
+var result = solutions[4].Part1();
+Console.WriteLine(result);
 

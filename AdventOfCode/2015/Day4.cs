@@ -4,30 +4,30 @@ using System.Text;
 
 namespace AdventOfCode._2015;
 
-public class Day4 : Solution
+public class Day4 : Solution<Day4>
 {
     public Day4(InputParser.Mode parseMode) : base(parseMode) {}
 
-    public override void Part1()
+    public override int Part1()
     {
         int value = -1;
-        foreach (var line in InputParser.GetInputRaw(_parseMode))
+        foreach (var line in Input)
         {
             value = ComputeLowestKeyNumber(line, 5);
         }
-        
-        Console.WriteLine(value);
+
+        return value;
     }
 
-    public override void Part2()
+    public override int Part2()
     {
         int value = -1;
-        foreach (var line in InputParser.GetInputRaw(_parseMode))
+        foreach (var line in Input)
         {
             value = ComputeLowestKeyNumber(line, 6);
         }
-        
-        Console.WriteLine(value);
+
+        return value;
     }
 
     private int ComputeLowestKeyNumber(string key, int zeroCount)

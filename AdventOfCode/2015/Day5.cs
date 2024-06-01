@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode._2015;
 
-public class Day5 : Solution
+public class Day5 : Solution<Day5>
 {
     public Day5(InputParser.Mode parseMode) : base(parseMode) {}
 
@@ -13,10 +13,10 @@ public class Day5 : Solution
         "xy",
     };
     
-    public override void Part1()
+    public override int Part1()
     {
         int niceStrings = 0;
-        foreach (var line in InputParser.GetInputRaw(_parseMode))
+        foreach (var line in Input)
         {
             int vowelCount = 0;
             int doubleCount = 0;
@@ -44,11 +44,11 @@ public class Day5 : Solution
 
             niceStrings += isNice ? 1 : 0;
         }
-        
-        Console.WriteLine(niceStrings);
+
+        return niceStrings;
     }
 
-    public override void Part2()
+    public override int Part2()
     {
         throw new NotImplementedException();
     }

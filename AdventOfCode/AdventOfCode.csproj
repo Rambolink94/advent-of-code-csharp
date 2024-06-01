@@ -8,13 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="2015\Input\day_1.txt">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
+    <Folder Include="2016\" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="powershell.exe -ExecutionPolicy Bypass -File $(ProjectDir)/Build/copy-input-folders.ps1 -SourceDir $(ProjectDir) -TargetDir $(TargetDir)" />
+    <Exec Command="powershell.exe -ExecutionPolicy Bypass -File $(SolutionDir)Build\copy-input-folders.ps1 -TargetDir $(TargetDir)" />
   </Target>
 
 </Project>

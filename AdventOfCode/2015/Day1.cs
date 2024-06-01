@@ -1,17 +1,17 @@
 ﻿
 namespace AdventOfCode._2015
 {
-    public class Day1 : Solution
+    public class Day1 : Solution<Day1>
     {
         public Day1(InputParser.Mode parseMode) : base(parseMode) {}
         
         /// <summary>
         ///     Finds the floor santa is on after parsing all instructions.
         /// </summary>
-        public override void Part1()
+        public override int Part1()
         {
             int floor = 0;
-            foreach (var line in InputParser.GetInputRaw(_parseMode))
+            foreach (var line in Input)
             {
                 foreach (char c in line)
                 {
@@ -19,17 +19,17 @@ namespace AdventOfCode._2015
                 }
             }
 
-            Console.WriteLine(floor);
+            return floor;
         }
 
         /// <summary>
         ///     Gets the first position in the input where santa enters the basement.
         /// </summary>
-        public override void Part2()
+        public override int Part2()
         {
             int floor = 0;
             int position = 0;
-            foreach (var line in InputParser.GetInputRaw(_parseMode))
+            foreach (var line in Input)
             {
                 foreach (char c in line)
                 {
@@ -42,7 +42,7 @@ namespace AdventOfCode._2015
                 }
             }
 
-            Console.WriteLine(position);
+            return floor;
         }
 
         private int GetNextFloor(char c)

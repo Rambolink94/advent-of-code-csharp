@@ -1,14 +1,14 @@
 ﻿namespace AdventOfCode._2015;
 
-public class Day3 : Solution
+public class Day3 : Solution<Day1>
 {
     public Day3(InputParser.Mode parseMode) : base(parseMode) {}
 
-    public override void Part1()
+    public override int Part1()
     {
         var position = new Point(0, 0);
         var visited = new HashSet<Point> { position };
-        foreach (var line in InputParser.GetInputRaw(_parseMode))
+        foreach (var line in Input)
         {
             foreach (var c in line)
             {
@@ -17,17 +17,17 @@ public class Day3 : Solution
                 visited.Add(position);
             }
         }
-        
-        Console.WriteLine(visited.Count);
+
+        return visited.Count;
     }
 
-    public override void Part2()
+    public override int Part2()
     {
         var santaPosition = new Point(0, 0);
         var robotPosition = new Point(0, 0);
         var visited = new HashSet<Point> { santaPosition };
         bool isSantaTurn = true;
-        foreach (var line in InputParser.GetInputRaw(_parseMode))
+        foreach (var line in Input)
         {
             foreach (var c in line)
             {
@@ -46,8 +46,8 @@ public class Day3 : Solution
                 isSantaTurn = !isSantaTurn;
             }
         }
-        
-        Console.WriteLine(visited.Count);
+
+        return visited.Count;
     }
 
     private struct Point(int x, int y)
