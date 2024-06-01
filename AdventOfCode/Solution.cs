@@ -4,12 +4,14 @@
         where T : class
     {
         private readonly InputParser.Mode _parseMode;
-        protected IEnumerable<string> Input => InputParser.GetInputRaw<T>(_parseMode);
+        private readonly int _option;
+        protected IEnumerable<string> Input => InputParser.GetInputRaw<T>(_parseMode, _option);
         
-        protected Solution(InputParser.Mode parseMode)
+        protected Solution(InputParser.Mode parseMode, int option = 0)
             : base(typeof(T))
         {
             _parseMode = parseMode;
+            _option = option;
         }
     }
 

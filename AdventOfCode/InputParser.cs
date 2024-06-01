@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.CompilerServices;
-
-namespace AdventOfCode
+﻿namespace AdventOfCode
 {
     public static class InputParser
     {
-        public static IEnumerable<string> GetInputRaw<T>(Mode inputMode)
+        public static IEnumerable<string> GetInputRaw<T>(Mode inputMode, int option = 0)
         {
             var inputPath = ParseInputPath(typeof(T));
 
@@ -23,8 +18,12 @@ namespace AdventOfCode
                     if (!line.StartsWith('#'))
                         continue;
                     
-                    var mode = Enum.Parse<Mode>(line[1..], true);
-                    if (mode == inputMode)
+                    var mode = Enum.Parse<Mode>(
+                        int.TryParse(line[^1].ToString(), out var value)
+                        ? line[1..^1]
+                        : line[1..], true);
+
+                    if (mode == inputMode && value == option)
                         modeFound = true;
                     
                     continue;

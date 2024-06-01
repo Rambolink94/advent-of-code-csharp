@@ -9,9 +9,9 @@ var solutions = new List<Solution>
     new Day2(parseMode),
     new Day3(parseMode),
     new Day4(parseMode),
-    new Day5(parseMode),
+    new Day5(parseMode)
 };
 
-var result = solutions[4].Part1();
+var result = solutions[4].Part2();
 Console.WriteLine(result);
 
