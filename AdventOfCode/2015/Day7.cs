@@ -8,27 +8,48 @@ public class Day7 : Solution<Day7>
 
     public override int Part1()
     {
-        var wires = new Dictionary<string, ushort>();
+        var wires = new HashSet<SignalInput>();
+        var gates = new List<Gate>();
+        var inputs = new List<(SignalInput Signal, Wire output)>();
         foreach (var line in Input)
         {
             var parts = line.Split("->", StringSplitOptions.TrimEntries);
-            var output = parts[^1];
+            var output = (Wire)GetOrCreateInput(parts[^1], wires);
             var opParts = parts[0].Split(' ', StringSplitOptions.TrimEntries);
             switch(opParts)
             {
                 case ["NOT", ..]:
-                    NotOp(opParts[1], output, wires);
+                    SignalInput wire = GetOrCreateInput(opParts[1], wires);
+                    var notGate = new Gate(new [] { wire }, output, "NOT");
+                    gates.Add(notGate);
                     break;
                 case [not null]:
-                    AssignmentOp(opParts[0], output, wires);
+                    var input = GetOrCreateInput(opParts[0], wires);
+                    if (input is Wire w)
+                    {
+                        var assignmentGate = new Gate(w, output, "ASSIGNMENT");
+                        gates.Add(assignmentGate);
+                        break;
+                    }
+                    
+                    inputs.Add((input, output));
                     break;
                 default:
-                    GateOp(opParts[0], opParts[2], opParts[1], output, wires);
+                    SignalInput wireA = GetOrCreateInput(opParts[0], wires);
+                    SignalInput wireB = GetOrCreateInput(opParts[2], wires);
+                    
+                    var gate = new Gate(new []{ wireA, wireB }, output, opParts[1]);
+                    gates.Add(gate);
                     break;
             }
         }
 
-        return wires["a"];
+        foreach ((SignalInput signal, Wire output) in inputs)
+        {
+            output.Signal = signal.Signal;
+        }
+        
+        return wires.First(x => (x as Wire)!.Id == "a").Signal;
     }
 
     public override int Part2()
@@ -36,91 +57,75 @@ public class Day7 : Solution<Day7>
         throw new NotImplementedException();
     }
 
-    private void NotOp(string input, string output, Dictionary<string, ushort> wires)
+    private SignalInput GetOrCreateInput(string input, HashSet<SignalInput> wires, ushort signal = 0)
     {
-        AddWires(wires, input, output);
-
-        wires[output] = (ushort)~wires[input];
-    }
-
-    private void AssignmentOp(string input, string output, Dictionary<string, ushort> wires)
-    {
-        AddWires(wires, input, output);
-        
-        wires[output] = ushort.TryParse(input, out var value) ? value : wires[input];
-    }
-
-    private void GateOp(string inputA, string inputB, string op, string output, Dictionary<string, ushort> wires)
-    {
-        AddWires(wires, inputA, inputB, output);
-
-        var a = wires.TryGetValue(inputA, out var valueA) ? valueA : ushort.Parse(inputA);
-        var b = wires.TryGetValue(inputB, out var valueB) ? valueB : ushort.Parse(inputB);
-        
-        wires[output] = op switch
+        if (ushort.TryParse(input, out var number))
         {
-            "RSHIFT" => (ushort)(a >> b),
-            "LSHIFT" => (ushort)(a << b),
-            "OR" => (ushort)(a | b),
-            "AND" => (ushort)(a & b),
-            _ => throw new InvalidOperationException($"{op} is an invalid operation"),
-        };
-    }
-
-    private void AddWires(Dictionary<string, ushort> wires, params string[] wiresToAdd)
-    {
-        foreach (string wire in wiresToAdd)
-        {
-            if (!ushort.TryParse(wire, out _))
-            {
-                _ = wires.TryAdd(wire, 0);
-            }
+            return new SignalInput(number);
         }
+
+        SignalInput? wire = wires.FirstOrDefault(x => x is Wire wire && wire.Id == input);
+        if (wire is null)
+        {
+            wire = new Wire(input, signal);
+            wires.Add(wire);
+        }
+
+        return wire;
     }
 
-    private class Operation
+    private class Gate
     {
-        public SignalInput[] Inputs { get; }
-        public Wire Output { get; }
+        private readonly SignalInput[] _inputs;
+        private readonly Wire _output;
+        private readonly string _op;
 
-        private string _op;
-        private int _activeSignals;
-
-        public Operation(SignalInput[] inputs, Wire output, string op)
+        public Gate(SignalInput[] inputs, Wire output, string op)
         {
-            Inputs = inputs;
-            Output = output;
+            _inputs = inputs;
+            _output = output;
             _op = op;
 
-            foreach (SignalInput input in Inputs)
+            foreach (SignalInput input in _inputs)
             {
                 if (input is Wire wire)
                     wire.SignalReceived += OnSignalReceived;
             }
         }
 
+        public Gate(SignalInput input, Wire output, string op)
+            : this(new [] { input }, output, op)
+        {
+        }
+
         private void OnSignalReceived()
         {
-            if (Inputs.All(x => x.Signal > 0))
+            if (_inputs.All(x => x.Signal > 0))
             {
-                Output.Signal = TriggerOperation();
+                _output.Signal = Process();
             }
         }
 
-        private ushort TriggerOperation()
+        private ushort Process()
         {
-            ushort a = Inputs[0].Signal;
-            ushort b = Inputs.Length > 1 ? Inputs[1].Signal : (ushort)0;
+            ushort a = _inputs[0].Signal;
+            ushort b = _inputs.Length > 1 ? _inputs[1].Signal : (ushort)0;
             
-            return _op switch
+            var result = _op switch
             {
                 "NOT" => (ushort)~a,
                 "RSHIFT" => (ushort)(a >> b),
                 "LSHIFT" => (ushort)(a << b),
                 "OR" => (ushort)(a | b),
                 "AND" => (ushort)(a & b),
+                "ASSIGNMENT" => a,
                 _ => throw new InvalidOperationException($"{_op} is an invalid operation"),
             };
+
+            Console.WriteLine($"Processing: {_inputs[0].Signal} {(_inputs.Length > 1 ? _inputs[1].Signal : string.Empty)}" +
+                              $" -> {result}");
+            
+            return result;
         }
     }
 
@@ -129,7 +134,7 @@ public class Day7 : Solution<Day7>
         public virtual ushort Signal { get; set; } = signal;
     }
     
-    private class Wire(string id) : SignalInput
+    private class Wire(string id, ushort signal = 0) : SignalInput(signal)
     {
         private ushort _signal;
         
