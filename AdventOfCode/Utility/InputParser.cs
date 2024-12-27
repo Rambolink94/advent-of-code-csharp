@@ -15,13 +15,13 @@
 
                 if (!modeFound)
                 {
-                    if (!line.StartsWith('#'))
+                    if (!line.StartsWith("$$"))
                         continue;
                     
                     var mode = Enum.Parse<Mode>(
                         int.TryParse(line[^1].ToString(), out var value)
-                        ? line[1..^1]
-                        : line[1..], true);
+                        ? line[2..^1]
+                        : line[2..], true);
 
                     if (mode == inputMode && (value == option || option == 0))
                         modeFound = true;
@@ -29,7 +29,7 @@
                     continue;
                 }
                 
-                if (line.StartsWith('#'))
+                if (line.StartsWith("$$"))
                 {
                     yield break;
                 }

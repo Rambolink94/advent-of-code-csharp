@@ -1,11 +1,11 @@
-﻿#test1
+﻿$$test1
 ugknbfddgicrmopn
 aaa
 jchzalrnumimnmhp
 haegwjzuvuyypxyu
 dvszwmarrgswjxmb
 
-#test2
+$$test2
 aaa
 xxyxx
 abcdaaa
@@ -14,7 +14,7 @@ qjhvhtzxzqqjkmpb
 uurcxstgmygtbstg
 ieodomkazucvgmuy
 
-#real
+$$real
 zgsnvdmlfuplrubt
 vlhagaovgqjmgvwq
 ffumlmqwfcsyqpss

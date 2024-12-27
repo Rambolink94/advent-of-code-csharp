@@ -8,9 +8,9 @@ public class Day7 : Solution<Day7>
 
     public override int Part1()
     {
-        var wires = new HashSet<SignalInput>();
+        var wires = new HashSet<Wire>();
         var gates = new List<Gate>();
-        var inputs = new List<(SignalInput Signal, Wire output)>();
+        var inputs = new List<InitialSignal>();
         foreach (var line in Input)
         {
             var parts = line.Split("->", StringSplitOptions.TrimEntries);
@@ -19,12 +19,12 @@ public class Day7 : Solution<Day7>
             switch(opParts)
             {
                 case ["NOT", ..]:
-                    SignalInput wire = GetOrCreateInput(opParts[1], wires);
-                    var notGate = new Gate(new [] { wire }, output, "NOT");
+                    InputOutput wire = GetOrCreateInput(opParts[1], wires, output);
+                    var notGate = new Gate(wire, output, "NOT");
                     gates.Add(notGate);
                     break;
                 case [not null]:
-                    var input = GetOrCreateInput(opParts[0], wires);
+                    var input = GetOrCreateInput(opParts[0], wires, output);
                     if (input is Wire w)
                     {
                         var assignmentGate = new Gate(w, output, "ASSIGNMENT");
@@ -32,24 +32,24 @@ public class Day7 : Solution<Day7>
                         break;
                     }
                     
-                    inputs.Add((input, output));
+                    inputs.Add((InitialSignal)input);
                     break;
                 default:
-                    SignalInput wireA = GetOrCreateInput(opParts[0], wires);
-                    SignalInput wireB = GetOrCreateInput(opParts[2], wires);
+                    InputOutput wireA = GetOrCreateInput(opParts[0], wires);
+                    InputOutput wireB = GetOrCreateInput(opParts[2], wires);
                     
-                    var gate = new Gate(new []{ wireA, wireB }, output, opParts[1]);
+                    var gate = new Gate(new List<InputOutput> { wireA, wireB }, output, opParts[1]);
                     gates.Add(gate);
                     break;
             }
         }
 
-        foreach ((SignalInput signal, Wire output) in inputs)
+        foreach (InitialSignal signal in inputs)
         {
-            output.Signal = signal.Signal;
+            signal.Propagate();
         }
         
-        return wires.First(x => (x as Wire)!.Id == "a").Signal;
+        return wires.First(x => x.Id == "a").Signal;
     }
 
     public override int Part2()
@@ -57,61 +57,94 @@ public class Day7 : Solution<Day7>
         throw new NotImplementedException();
     }
 
-    private SignalInput GetOrCreateInput(string input, HashSet<SignalInput> wires, ushort signal = 0)
+    private InputOutput GetOrCreateInput(string input, HashSet<Wire> wires, InputOutput? output = null)
     {
         if (ushort.TryParse(input, out var number))
         {
-            return new SignalInput(number);
+            return new InitialSignal(number, output);
         }
 
-        SignalInput? wire = wires.FirstOrDefault(x => x is Wire wire && wire.Id == input);
+        Wire? wire = wires.FirstOrDefault(x => x.Id == input);
         if (wire is null)
         {
-            wire = new Wire(input, signal);
+            wire = new Wire(input, output);
             wires.Add(wire);
         }
 
         return wire;
     }
 
-    private class Gate
+    private abstract class InputOutput
     {
-        private readonly SignalInput[] _inputs;
-        private readonly Wire _output;
-        private readonly string _op;
+        protected List<InputOutput> Inputs { get; init; } = new List<InputOutput>();
+        protected InputOutput? Output { get; private set; }
 
-        public Gate(SignalInput[] inputs, Wire output, string op)
+        protected InputOutput(ushort signal = 0, InputOutput? output = null)
         {
-            _inputs = inputs;
-            _output = output;
+            Signal = signal;
+            Output = output;
+            Output?.AddInput(this);
+        }
+
+        public void AddInput(InputOutput input)
+        {
+            if (!Inputs.Contains(input))
+            {
+                Inputs.Add(input);
+            }
+        }
+        
+        public void SetOutput(InputOutput output)
+        {
+            if (Output is null)
+            {
+                Output = output;
+            }
+        }
+
+        public ushort Signal { get; set; }
+        
+        public abstract void Propagate();
+    }
+    
+    private class Gate : InputOutput
+    {
+        private readonly string _op;
+        private int _propagationRequests;
+
+        public Gate(List<InputOutput> inputs, InputOutput output, string op)
+        {
+            Inputs = inputs;
+            SetOutput(output);
             _op = op;
 
-            foreach (SignalInput input in _inputs)
+            foreach (var input in Inputs)
             {
-                if (input is Wire wire)
-                    wire.SignalReceived += OnSignalReceived;
+                input.SetOutput(this);
             }
-        }
-
-        public Gate(SignalInput input, Wire output, string op)
-            : this(new [] { input }, output, op)
-        {
-        }
-
-        private void OnSignalReceived()
-        {
-            if (_inputs.All(x => x.Signal > 0))
-            {
-                _output.Signal = Process();
-            }
-        }
-
-        private ushort Process()
-        {
-            ushort a = _inputs[0].Signal;
-            ushort b = _inputs.Length > 1 ? _inputs[1].Signal : (ushort)0;
             
-            var result = _op switch
+            output.AddInput(this);
+        }
+        
+        public Gate(InputOutput input, InputOutput output, string op)
+            : this(new List<InputOutput> { input }, output, op)
+        {
+        }
+        
+        public override void Propagate()
+        {
+            if (++_propagationRequests >= Inputs.Count)
+            {
+                Signal = Process();
+                Output?.Propagate();
+            }
+        }
+
+        public ushort Process()
+        {
+            var a = Inputs[0].Signal;
+            var b = Inputs.Count > 1 ? Inputs[1].Signal : (ushort)0;
+            return _op switch
             {
                 "NOT" => (ushort)~a,
                 "RSHIFT" => (ushort)(a >> b),
@@ -121,35 +154,25 @@ public class Day7 : Solution<Day7>
                 "ASSIGNMENT" => a,
                 _ => throw new InvalidOperationException($"{_op} is an invalid operation"),
             };
-
-            Console.WriteLine($"Processing: {_inputs[0].Signal} {(_inputs.Length > 1 ? _inputs[1].Signal : string.Empty)}" +
-                              $" -> {result}");
-            
-            return result;
         }
     }
 
-    private class SignalInput(ushort signal = 0)
+    private class InitialSignal(ushort signal, InputOutput? output) : InputOutput(signal, output)
     {
-        public virtual ushort Signal { get; set; } = signal;
-    }
-    
-    private class Wire(string id, ushort signal = 0) : SignalInput(signal)
-    {
-        private ushort _signal;
-        
-        public string Id { get; } = id;
-
-        public override ushort Signal
+        public override void Propagate()
         {
-            get => _signal;
-            set
-            {
-                _signal = value;
-                SignalReceived?.Invoke();
-            }
+            Output?.Propagate();
         }
+    }
 
-        public event Action? SignalReceived;
+    private class Wire(string id, InputOutput? output = null) : InputOutput(output: output)
+    {
+        public string Id { get; } = id;
+        
+        public override void Propagate()
+        {
+            Signal = Inputs[0].Signal;
+            Output?.Propagate();
+        }
     }
 }

@@ -1,11 +1,11 @@
-﻿#test1
+﻿$$test1
 toggle 0,0 through 999,0
 
-#test2
+$$test2
 turn on 0,0 through 0,0
 toggle 0,0 through 999,999
 
-#real
+$$real
 turn off 660,55 through 986,197
 turn off 341,304 through 638,850
 turn off 199,133 through 461,193
