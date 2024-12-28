@@ -9,7 +9,7 @@ public class Day3 : Solution<Day3>
     {
     }
 
-    public override int Part1()
+    public override long Part1()
     {
         int total = 0;
         foreach (var chars in Input.Select(line => line.ToCharArray()))
@@ -67,7 +67,7 @@ public class Day3 : Solution<Day3>
         return total;
     }
     
-    public override int Part2()
+    public override long Part2()
     {
         int total = 0;
         bool foundMul = false;

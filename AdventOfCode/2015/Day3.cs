@@ -6,7 +6,7 @@ public class Day3 : Solution<Day1>
 {
     public Day3(InputParser.Mode parseMode) : base(parseMode) {}
 
-    public override int Part1()
+    public override long Part1()
     {
         var position = new Point(0, 0);
         var visited = new HashSet<Point> { position };
@@ -23,7 +23,7 @@ public class Day3 : Solution<Day1>
         return visited.Count;
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         var santaPosition = new Point(0, 0);
         var robotPosition = new Point(0, 0);

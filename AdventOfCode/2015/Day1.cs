@@ -10,7 +10,7 @@ namespace AdventOfCode._2015
         /// <summary>
         ///     Finds the floor santa is on after parsing all instructions.
         /// </summary>
-        public override int Part1()
+        public override long Part1()
         {
             int floor = 0;
             foreach (var line in Input)
@@ -27,7 +27,7 @@ namespace AdventOfCode._2015
         /// <summary>
         ///     Gets the first position in the input where santa enters the basement.
         /// </summary>
-        public override int Part2()
+        public override long Part2()
         {
             int floor = 0;
             int position = 0;

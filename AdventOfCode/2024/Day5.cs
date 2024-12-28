@@ -10,7 +10,7 @@ public class Day5 : Solution<Day5>
     {
     }
 
-    public override int Part1()
+    public override long Part1()
     {
         int updateTotal = 0;
         foreach (string line in Input)
@@ -41,7 +41,7 @@ public class Day5 : Solution<Day5>
         return updateTotal;
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         var invalidUpdates = new List<List<int>>();
         int updateTotal = 0;

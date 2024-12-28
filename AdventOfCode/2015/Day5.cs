@@ -7,7 +7,7 @@ public class Day5 : Solution<Day5>
 {
     public Day5(InputParser.Mode parseMode, int option = 0) : base(parseMode, option) {}
     
-    public override int Part1()
+    public override long Part1()
     {
         string vowels = "aeiou";
         string[] invalidStrings =
@@ -50,7 +50,7 @@ public class Day5 : Solution<Day5>
         return niceStrings;
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         int niceStrings = 0;
         foreach (var line in Input)

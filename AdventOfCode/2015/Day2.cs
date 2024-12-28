@@ -9,7 +9,7 @@ public class Day2 : Solution<Day1>
     {
     }
     
-    public override int Part1()
+    public override long Part1()
     {
         double squareFeet = 0d;
         foreach (var line in Input)
@@ -25,7 +25,7 @@ public class Day2 : Solution<Day1>
         return (int)squareFeet;
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         double totalRibbon = 0d;
         foreach (var line in Input)

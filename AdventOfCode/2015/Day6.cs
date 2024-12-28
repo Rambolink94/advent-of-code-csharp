@@ -6,7 +6,7 @@ public class Day6 : Solution<Day6>
 {
     public Day6(InputParser.Mode parseMode, int option = 0) : base(parseMode, option) {}
     
-    public override int Part1()
+    public override long Part1()
     {
         var lights = CalculateLights<bool>((instruction, originalValue) => instruction switch
         {
@@ -19,7 +19,7 @@ public class Day6 : Solution<Day6>
         return lights.Count(x => x);
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         var lights = CalculateLights<int>((instruction, originalValue) => instruction switch
         {

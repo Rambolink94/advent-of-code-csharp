@@ -11,7 +11,7 @@ public class Day6 : Solution<Day6>
         this._parseMode = parseMode;
     }
 
-    public override int Part1()
+    public override long Part1()
     {
         var visitedPositions = new HashSet<(int, int)>();
         Vector2 guardPos = Vector2.Zero;
@@ -50,7 +50,7 @@ public class Day6 : Solution<Day6>
         return visitedPositions.Count;
     }
     
-    public override int Part2()
+    public override long Part2()
     {
         int validPositions = 0;
         Vector2 guardPos;

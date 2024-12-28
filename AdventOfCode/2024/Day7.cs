@@ -8,7 +8,7 @@ public class Day7 : Solution<Day7>
     {
     }
 
-    public override int Part1()
+    public override long Part1()
     {
         long calibrationTotal = 0;
         var operators = new[] { "+", "*" };
@@ -70,7 +70,7 @@ public class Day7 : Solution<Day7>
         }
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         long calibrationTotal = 0;
         var operators = new[] { "+", "*", "||" };

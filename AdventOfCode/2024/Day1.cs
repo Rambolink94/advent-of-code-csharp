@@ -6,7 +6,7 @@ public class Day1 : Solution<Day1>
 {
     public Day1(InputParser.Mode parseMode, int option = 0) : base(parseMode, option) {}
 
-    public override int Part1()
+    public override long Part1()
     {
         var leftList = new List<int>();
         var rightList = new List<int>();
@@ -29,7 +29,7 @@ public class Day1 : Solution<Day1>
         return total;
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         var leftList = new List<int>();
         var rightList = new List<int>();

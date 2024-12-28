@@ -11,7 +11,7 @@ public class Day4 : Solution<Day4>
     {
     }
 
-    public override int Part1()
+    public override long Part1()
     {
         var wordGrid = Input.Select(line => line.ToCharArray()).ToArray();
         int validWords = 0;
@@ -26,7 +26,7 @@ public class Day4 : Solution<Day4>
         return validWords;
     }
     
-    public override int Part2()
+    public override long Part2()
     {
         var wordGrid = Input.Select(line => line.ToCharArray()).ToArray();
         int validCrosses = 0;

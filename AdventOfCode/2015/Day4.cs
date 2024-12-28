@@ -9,7 +9,7 @@ public class Day4 : Solution<Day4>
 {
     public Day4(InputParser.Mode parseMode) : base(parseMode) {}
 
-    public override int Part1()
+    public override long Part1()
     {
         int value = -1;
         foreach (var line in Input)
@@ -20,7 +20,7 @@ public class Day4 : Solution<Day4>
         return value;
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         int value = -1;
         foreach (var line in Input)

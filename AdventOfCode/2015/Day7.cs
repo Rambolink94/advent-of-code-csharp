@@ -6,7 +6,7 @@ public class Day7 : Solution<Day7>
 {
     public Day7(InputParser.Mode parseMode, int option = 0) : base(parseMode, option) {}
 
-    public override int Part1()
+    public override long Part1()
     {
         var wires = new HashSet<Wire>();
         var gates = new List<Gate>();
@@ -52,7 +52,7 @@ public class Day7 : Solution<Day7>
         return wires.First(x => x.Id == "a").Signal;
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         throw new NotImplementedException();
     }

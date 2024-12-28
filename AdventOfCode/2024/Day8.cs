@@ -9,7 +9,7 @@ public class Day8 : Solution<Day8>
     {
     }
 
-    public override int Part1()
+    public override long Part1()
     {
         var nodeMap = Input.Select(line => line.ToCharArray()).ToArray();
         var antiNodeMap = new HashSet<Vector2Int>();
@@ -53,7 +53,7 @@ public class Day8 : Solution<Day8>
         return antiNodeMap.Count;
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         var nodeMap = Input.Select(line => line.ToCharArray()).ToArray();
         var antiNodeMap = new HashSet<Vector2Int>();

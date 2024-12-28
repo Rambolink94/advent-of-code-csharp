@@ -6,7 +6,7 @@ public class Day2 : Solution<Day2>
 {
     public Day2(InputParser.Mode parseMode, int option = 0) : base(parseMode, option) {}
 
-    public override int Part1()
+    public override long Part1()
     {
         int safeLevels = 0;
         foreach (var levels in Input.Select(line => line.Split(' ').Select(int.Parse).ToList()))
@@ -20,7 +20,7 @@ public class Day2 : Solution<Day2>
         return safeLevels;
     }
 
-    public override int Part2()
+    public override long Part2()
     {
         // 329 - 374
         int safeLevels = 0;

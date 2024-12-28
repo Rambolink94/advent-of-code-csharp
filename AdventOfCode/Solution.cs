@@ -2,6 +2,7 @@
 
 namespace AdventOfCode
 {
+    // TODO: Implement a logger class.
     public abstract class Solution<T> : Solution
         where T : class
     {
@@ -26,8 +27,8 @@ namespace AdventOfCode
         
         public Type SolutionType { get; }
         
-        public abstract int Part1();
+        public abstract long Part1();
 
-        public abstract int Part2();
+        public abstract long Part2();
     }
 }
