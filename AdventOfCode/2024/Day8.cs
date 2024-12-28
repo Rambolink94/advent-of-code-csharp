@@ -81,7 +81,40 @@ public class Day8 : Solution<Day8>
 
         foreach (var node in foundNodes)
         {
-            
+            for (int i = 0; i < node.Value.Count; i++)
+            {
+                Vector2Int currentPos = node.Value[i];
+                for (int j = 0; j < node.Value.Count; j++)
+                {
+                    Vector2Int otherPos = node.Value[j];
+                    if (i == j) continue;
+
+                    Vector2Int a = currentPos;
+                    Vector2Int b = otherPos;
+
+                    // These need to be added too, because all antennas (nodes) are anti-nodes.
+                    antiNodeMap.Add(a);
+                    antiNodeMap.Add(b);
+                    
+                    Vector2Int antiNode1 = 2 * a - b;
+                    Vector2Int antiNode2 = 2 * b - a;
+
+                    while (InNodeMapRange(nodeMap, antiNode1) || InNodeMapRange(nodeMap, antiNode2))
+                    {
+                        if (InNodeMapRange(nodeMap, antiNode1)) antiNodeMap.Add(antiNode1);
+                        if (InNodeMapRange(nodeMap, antiNode2)) antiNodeMap.Add(antiNode2);
+                        
+                        Vector2Int c = 2 * antiNode1 - a;
+                        Vector2Int d = 2 * antiNode2 - b;
+
+                        a = antiNode1;
+                        b = antiNode2;
+
+                        antiNode1 = c;
+                        antiNode2 = d;
+                    }
+                }
+            }
         }
         
         PrintMap(nodeMap, antiNodeMap);
