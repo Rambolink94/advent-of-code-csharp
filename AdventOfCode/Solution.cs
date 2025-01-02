@@ -16,6 +16,12 @@ namespace AdventOfCode
             _parseMode = parseMode;
             _option = option;
         }
+
+        /// <summary>
+        ///     Gets the input as a jagged 2d array of chars.
+        /// </summary>
+        /// <returns>A jagged 2d array of chars.</returns>
+        protected char[][] GetInputAsCharMap() => Input.Select(line => line.ToCharArray()).ToArray();
     }
 
     public abstract class Solution
