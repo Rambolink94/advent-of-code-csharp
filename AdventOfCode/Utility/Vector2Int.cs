@@ -6,27 +6,34 @@ namespace AdventOfCode.Utility;
 
 public readonly struct Vector2Int : IEquatable<Vector2Int>, IFormattable
 {
-    public int X { get; }
+    private readonly int _x;
+    private readonly int _y;
 
-    public int Y { get; }
-    
+    public int X => _x;
+
+    public int Y => _y;
+
     public Vector2Int(int value) : this(value, value)
     {
     }
 
     public Vector2Int(int x, int y)
     {
-        X = x;
-        Y = y;
+        _x = x;
+        _y = y;
     }
 
     public static Vector2Int Zero => default;
     
+    public double Length => Math.Sqrt(LengthSquared);
+    
+    public long LengthSquared =>_x * (long)_x + _y * (long)_y;
+    
     public static Vector2Int operator *(Vector2Int left, Vector2Int right)
     {
         return new Vector2Int(
-            left.X * right.X,
-            left.Y * right.Y
+            left._x * right._x,
+            left._y * right._y
         );
     }
     
@@ -39,20 +46,35 @@ public readonly struct Vector2Int : IEquatable<Vector2Int>, IFormattable
     {
         return right * left;
     }
+
+    public static Vector2Int operator /(Vector2Int left, int right)
+    {
+        return new Vector2Int(left._x / right, left._y / right);
+    }
     
+    public static Vector2Int operator /(int left, Vector2Int right)
+    {
+        return new Vector2Int(left / right._x, left / right._y);
+    }
+    
+    public static Vector2Int operator /(Vector2Int left, Vector2Int right)
+    {
+        return new Vector2Int(left._x / right._x, left._y / right._y);
+    }
+
     public static Vector2Int operator +(Vector2Int left, Vector2Int right)
     {
         return new Vector2Int(
-            left.X + right.X,
-            left.Y + right.Y
+            left._x + right._x,
+            left._y + right._y
         );
     }
     
     public static Vector2Int operator -(Vector2Int left, Vector2Int right)
     {
         return new Vector2Int(
-            left.X - right.X,
-            left.Y - right.Y
+            left._x - right._x,
+            left._y - right._y
         );
     }
     
@@ -63,8 +85,8 @@ public readonly struct Vector2Int : IEquatable<Vector2Int>, IFormattable
     
     public static bool operator ==(Vector2Int left, Vector2Int right)
     {
-        return (left.X == right.X)
-               && (left.Y == right.Y);
+        return (left._x == right._x)
+               && (left._y == right._y);
     }
     
     public static bool operator !=(Vector2Int left, Vector2Int right)
@@ -72,9 +94,26 @@ public readonly struct Vector2Int : IEquatable<Vector2Int>, IFormattable
         return !(left == right);
     }
 
+    public Vector2Int Clamp(int min, int max)
+    {
+        return new Vector2Int(Math.Clamp(_x, min, max), Math.Clamp(_y, min, max));
+    }
+    
+    public Vector2Int Rotate(float angleInDegrees)
+    {
+        float angleRadians = angleInDegrees * MathF.PI / 180;
+        float cosTheta = MathF.Cos(angleRadians);
+        float sinTheta = MathF.Sin(angleRadians);
+        
+        return new Vector2Int(
+            (int)MathF.Round(cosTheta * _x - sinTheta * _y),
+            (int)MathF.Round(sinTheta * _x + cosTheta * _y)
+        );
+    }
+
     public bool Equals(Vector2Int other)
     {
-        return X == other.X && Y == other.Y;
+        return _x == other._x && _y == other._y;
     }
 
     public override bool Equals(object? obj)
@@ -84,7 +123,7 @@ public readonly struct Vector2Int : IEquatable<Vector2Int>, IFormattable
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(X, Y);
+        return HashCode.Combine(_x, _y);
     }
     
     public readonly override string ToString()
@@ -101,6 +140,6 @@ public readonly struct Vector2Int : IEquatable<Vector2Int>, IFormattable
     {
         string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
 
-        return $"<{X.ToString(format, formatProvider)}{separator} {Y.ToString(format, formatProvider)}>";
+        return $"<{_x.ToString(format, formatProvider)}{separator} {_y.ToString(format, formatProvider)}>";
     }
 }
