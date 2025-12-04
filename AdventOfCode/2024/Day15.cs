@@ -65,12 +65,7 @@ public class Day15 : Solution<Day15>
         // 1526018 : Correct
         return map.SelectMany((row, y) => row.Select((c, x) => c == 'O' ? 100 * y + x : 0)).Sum();
     }
-
-    public override long Part2()
-    {
-        throw new NotImplementedException();
-    }
-
+    
     private Vector2Int Move(List<char[]> map, Vector2Int originalPosition, Vector2Int movementDirection)
     {
         Vector2Int newPosition = originalPosition + movementDirection;
@@ -117,7 +112,8 @@ public class Day15 : Solution<Day15>
     
     private bool IsBox(List<char[]> map, Vector2Int position)
     {
-        return map[position.Y][position.X] == 'O';
+        char c = map[position.Y][position.X];
+        return c is 'O' or '[' or ']';
     }
 
     private void PrintMap(List<char[]> map, Vector2Int robotPosition)
@@ -132,5 +128,105 @@ public class Day15 : Solution<Day15>
         }
         
         Console.WriteLine();
+    }
+
+    public override long Part2()
+    {
+        var map = new List<char[]>();
+        var moves = new List<Vector2Int>();
+        var robotPos = Vector2Int.Zero;
+        bool parsingMap = true;
+        foreach (var line in Input)
+        {
+            if (line[0] != '#')
+            {
+                parsingMap = false;
+            }
+            
+            if (parsingMap)
+            {
+                char[] chars = line.ToCharArray();
+                if (robotPos == Vector2Int.Zero)
+                {
+                    var index = Array.FindIndex(chars, c => c == '@');
+                    if (index >= 0)
+                    {
+                        robotPos = new Vector2Int(index * 2, map.Count);
+                        chars[index] = '.'; // Remove from map.
+                    }
+                }
+
+                // Extends map size horizontally.
+                char[] extendedChars = new char[chars.Length * 2];
+                for (int i = 0, j = 0; i < chars.Length; i++, j += 2)
+                {
+                    if (chars[i] == 'O')
+                    {
+                        extendedChars[j] = '[';
+                        extendedChars[j + 1] = ']';
+                    }
+                    else
+                    {
+                        extendedChars[j] = chars[i];
+                        extendedChars[j + 1] = chars[i];
+                    }
+                }
+                
+                map.Add(extendedChars);
+            }
+            else
+            {
+                var vectors = line.Select(c =>
+                {
+                    return c switch
+                    {
+                        '<' => new Vector2Int(-1, 0),
+                        '>' => new Vector2Int(1, 0),
+                        '^' => new Vector2Int(0, -1),
+                        'v' => new Vector2Int(0, 1),
+                        _ => throw new DataException($"'{c}' is an invalid character.")
+                    };
+                });
+                
+                moves.AddRange(vectors);
+            }
+        }
+
+        PrintMap(map, robotPos);
+        foreach (Vector2Int move in moves)
+        {
+            // robotPos = Move(map, robotPos, move);
+        }
+        PrintMap(map, robotPos);
+
+        // 1526018 : Correct
+        return map.SelectMany((row, y) => row.Select((c, x) => c == '[' ? 100 * y + x : 0)).Sum();
+    }
+    
+    private bool MoveBox2(List<char[]> map, Vector2Int boxPosition, Vector2Int movementDirection, bool isFirstCall)
+    {
+        Vector2Int newPosition = boxPosition + movementDirection;
+        if (isFirstCall)
+        {
+            // Check left and right to see where other box part is.
+            Vector2Int otherBoxPartPosition = map[boxPosition.Y][boxPosition.X] == '['
+                ? boxPosition + new Vector2Int(-1, 0)
+                : boxPosition + new Vector2Int(1, 0);
+        }
+
+        if (IsWall(map, newPosition)) return false;
+
+        if (IsBox(map, newPosition))
+        {
+            if (!MoveBox(map, newPosition, movementDirection))
+            {
+                return false;
+            }
+        }
+
+        map[boxPosition.Y][boxPosition.X] = '.';
+        map[newPosition.Y][newPosition.X] = 'O';
+
+        return true;
     }
 }

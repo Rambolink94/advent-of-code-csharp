@@ -27,6 +27,13 @@ var solutions2024 = new List<Solution>
     new AdventOfCode._2024.Day6(parseMode),
     new AdventOfCode._2024.Day7(parseMode),
     new AdventOfCode._2024.Day8(parseMode),
+    new AdventOfCode._2024.Day9(parseMode),
+    new AdventOfCode._2024.Day10(parseMode),
+    new AdventOfCode._2024.Day11(parseMode),
+    new AdventOfCode._2024.Day12(parseMode),
+    new AdventOfCode._2024.Day13(parseMode),
+    new AdventOfCode._2024.Day14(parseMode),
+    new AdventOfCode._2024.Day15(parseMode, 3),
 };
 
 var result = solutions2024[^1].Part2();
